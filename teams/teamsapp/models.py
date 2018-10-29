@@ -1,5 +1,11 @@
 from django.db import models
 from uuid import uuid4
+import string
+import random
+
+
+def generate_code(): 
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
 
 
 class Teams(models.Model):
@@ -11,6 +17,7 @@ class Teams(models.Model):
     created_at =  models.DateTimeField(auto_now_add=True)
     is_active =  models.BooleanField(default=True)
     members =  models.ManyToManyField("users.User")
+    members_code = models.CharField(max_length=15,default=generate_code)
 
     class Meta:
         ordering = ["created_at"] 
