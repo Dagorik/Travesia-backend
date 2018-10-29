@@ -2,7 +2,7 @@ from .base import *
 import  os
 import environ
 import dj_database_url
-from datetimen import datetime
+from datetime import datetime
 
 
 env = environ.Env()
