@@ -30,7 +30,8 @@ CSRF_COOKIE_SECURE = True
 CORS_ORIGIN_WHITELIST = env.list("WHITELIST")
 
 STATIC_URL = "/static/"
-STATIC_ROOT =  os.path.join(os.getcwd(),'/static/')
+STATIC_ROOT =  os.path.join(BASE_DIR, 'static')
+
 
 
 JWT_AUTH = {
