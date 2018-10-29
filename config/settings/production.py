@@ -1,6 +1,8 @@
 from .base import *
+import  os
 import environ
 import dj_database_url
+from datetimen import datetime
 
 
 env = environ.Env()
@@ -26,6 +28,9 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 CORS_ORIGIN_WHITELIST = env.list("WHITELIST")
+
+STATIC_URL = "/static/"
+STATIC_ROOT =  os.path.join(os.getcwd(),'/static/')
 
 
 JWT_AUTH = {
