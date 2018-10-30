@@ -20,13 +20,13 @@ class LoginView(APIView):
    
 
    def post(self,request):
-        serializer =  serializers.LoginSerializer(data=request.data)
-        if serializer.is_valid():
-            token =  serializer.save()
-            data = {"token":token}
-            return Response(data,status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+       serializer =  serializers.LoginSerializer(data=request.data)
+       if serializer.is_valid():
+           token =  serializer.save()
+           data = {"token":token}
+           return Response(data,status=status.HTTP_201_CREATED)
+       else:
+           return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
 

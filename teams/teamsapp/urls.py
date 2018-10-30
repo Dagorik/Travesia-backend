@@ -4,6 +4,6 @@ from teams.teamsapp import views
 
 
 urlpatterns = [
-    path('/', views.CreateTeams.as_view()),
+    path('create/', views.CreateTeam.as_view()),
 
 ]

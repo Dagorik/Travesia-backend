@@ -10,9 +10,13 @@ class CreateTeam(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self,request):
-        serializer =  CreateTeamSerializer(data=request.body)
+        serializer =  CreateTeamSerializer(data=request.data,context={'request': request})
         if serializer.is_valid():
             team = serializer.save()
             return Response({"id":team.id,"code":team.members_code},status.HTTP_201_CREATED)
         else:
-            return Response({"message":"Error to create team",status.HTTP_400_BAD_REQUEST})
+
+
+
+
+            return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)

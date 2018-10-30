@@ -12,7 +12,7 @@ class CreateTeamSerializer(serializers.ModelSerializer):
 
     
     def create(self,validated_data):
-       return Teams.objects.create(
-            leader=CurrentUserDefault(),
+        return Teams.objects.create(
+            leader=self.context['request'].user,
             name=validated_data["name"]
         )
