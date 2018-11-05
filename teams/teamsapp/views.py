@@ -2,9 +2,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from teams.teamsapp.serializer import CreateTeamSerializer,JoinTeamSerializer
-# Create your views here.
+from teams.teamsapp.serializer import CreateTeamSerializer,JoinTeamSerializer,TeamSerializer
+from teams.teamsapp.models import Teams
 
+class RetrieveTeams(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self,request):
+        teams  =  Teams.objects.all()
+        serializer = TeamSerializer(teams, many=True)
+        return Response(serializer.data,status.HTTP_200_OK)        
 
 class CreateTeam(APIView):
     permission_classes = (IsAuthenticated,)

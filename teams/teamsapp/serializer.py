@@ -5,6 +5,12 @@ from teams.teamsapp.models import Teams
 
 
 
+class TeamSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model =  Teams
+        fields = ('name','logo','mantra','created_at','is_active','leader')
+
 class CreateTeamSerializer(serializers.ModelSerializer):
 
     class Meta:

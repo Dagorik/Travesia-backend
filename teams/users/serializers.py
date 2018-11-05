@@ -1,13 +1,35 @@
 from rest_framework import serializers
-from teams.users.models import User
-
 from rest_framework_jwt.settings import api_settings
 
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import get_user_model
+from django.db.models import Q
+from teams.users.models import User
+from teams.teamsapp.serializer import TeamSerializer
+from teams.teamsapp.models import Teams
+
+
+
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    team =  serializers.SerializerMethodField()
+    
+
+    class Meta:
+        model =  User
+        fields = ('first_name',"last_name","email",
+                    "birth_date","gender","phone","is_leader",
+                    "profile_pic","team")
+
+    def get_team(self,user):
+        team = Teams.objects.filter(Q(leader=user) | Q(members=user))
+        return TeamSerializer(team[0]).data
 
 class SignupSerializer(serializers.ModelSerializer):
 

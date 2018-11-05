@@ -16,7 +16,7 @@ class Teams(models.Model):
     logo =  models.URLField(blank=True, null=True)
     created_at =  models.DateTimeField(auto_now_add=True)
     is_active =  models.BooleanField(default=True)
-    members =  models.ManyToManyField("users.User",blank=True)
+    members =  models.ManyToManyField("users.User",blank=True,related_name="equipos")
     members_code = models.CharField(max_length=15,default=generate_code)
 
     class Meta:

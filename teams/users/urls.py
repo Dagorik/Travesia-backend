@@ -7,5 +7,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 urlpatterns = [
     path('signup/', views.SignupView.as_view()),
     path('login/', views.LoginView.as_view()),
+    path('me/', views.MeView.as_view()),
+
 
 ]
