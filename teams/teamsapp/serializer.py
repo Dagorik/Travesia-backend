@@ -9,7 +9,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model =  Teams
-        fields = ('name','logo','mantra','created_at','is_active','leader')
+        fields = ('id','name','logo','mantra','created_at','is_active','leader','members_code')
 
 class CreateTeamSerializer(serializers.ModelSerializer):
 
@@ -48,3 +48,10 @@ class JoinTeamSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         team.members.add(user)
         return team
+    
+
+class LeaveSerializer(serializers.Serializer):
+
+    id_team =  serializers.CharField(max_length=150)
+
+    

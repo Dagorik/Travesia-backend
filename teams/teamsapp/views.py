@@ -37,4 +37,12 @@ class JoinTeam(APIView):
             return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
 
 
+class LeaveTeam(APIView):
+
+    permission_classes = (IsAuthenticated,)
+
+    def post(self,request):
+        pass
+
+
 

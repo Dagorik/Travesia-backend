@@ -28,8 +28,11 @@ class UserSerializer(serializers.ModelSerializer):
                     "profile_pic","team")
 
     def get_team(self,user):
-        team = Teams.objects.filter(Q(leader=user) | Q(members=user))
-        return TeamSerializer(team[0]).data
+        try:
+            team = Teams.objects.filter(Q(leader=user) | Q(members=user))
+            return TeamSerializer(team[0]).data
+        except:
+            return {}
 
 class SignupSerializer(serializers.ModelSerializer):
 
