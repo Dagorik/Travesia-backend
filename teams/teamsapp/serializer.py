@@ -2,14 +2,30 @@ from rest_framework import serializers
 from rest_framework.fields import CurrentUserDefault
 from django.db.models  import Q
 from teams.teamsapp.models import Teams
+from teams.users.models import User
+from teams.users import serializers  as ser
 
+class UserSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =  User
+        fields = ('first_name',"last_name","email",
+                    "birth_date","gender","phone","is_leader",
+                    "profile_pic")
 
 
 class TeamSerializer(serializers.ModelSerializer):
-
     class Meta:
         model =  Teams
         fields = ('id','name','logo','mantra','created_at','is_active','leader','members_code')
+
+
+class TeamMembersSerializer(serializers.ModelSerializer):
+    members =  UserSimpleSerializer(many=True)
+
+    class Meta:
+        model =  Teams
+        fields = ('id','name','logo','mantra','created_at','is_active','leader','members')
+
 
 class CreateTeamSerializer(serializers.ModelSerializer):
 

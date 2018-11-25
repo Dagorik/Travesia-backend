@@ -16,6 +16,7 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 
 
+
 class UserSerializer(serializers.ModelSerializer):
 
     team =  serializers.SerializerMethodField()
