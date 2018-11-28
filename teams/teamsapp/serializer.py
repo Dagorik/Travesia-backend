@@ -8,7 +8,7 @@ from teams.users import serializers  as ser
 class UserSimpleSerializer(serializers.ModelSerializer):
     class Meta:
         model =  User
-        fields = ('first_name',"last_name","email",
+        fields = ('id','first_name',"last_name","email",
                     "birth_date","gender","phone","is_leader",
                     "profile_pic")
 
@@ -67,7 +67,15 @@ class JoinTeamSerializer(serializers.ModelSerializer):
     
 
 class LeaveSerializer(serializers.Serializer):
+    id_user =  serializers.CharField(max_length=150)
 
-    id_team =  serializers.CharField(max_length=150)
+    def create(self,validated_data):
+        user = self.context['request'].user
+        team = Teams.objects.get(leader=user)
+        team.members.remove(validated_data['id_user'])
+        return team
+
+        
+
 
     

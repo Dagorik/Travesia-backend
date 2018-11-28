@@ -3,8 +3,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from teams.teamsapp.serializer import CreateTeamSerializer,JoinTeamSerializer,TeamSerializer,TeamMembersSerializer
+from teams.teamsapp.serializer import *
 from teams.teamsapp.models import Teams
+from teams.teamsapp.permissions import IsLeader
 
 class RetrieveTeams(APIView):
     permission_classes = (IsAuthenticated,)
@@ -51,10 +52,15 @@ class JoinTeam(APIView):
 
 class LeaveTeam(APIView):
 
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,IsLeader)
 
     def post(self,request):
-        pass
+        serializer =  LeaveSerializer(data=request.data,context={'request':request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message":"Member Removed"},status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
 
 
 
