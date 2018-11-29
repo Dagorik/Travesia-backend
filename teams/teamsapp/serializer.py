@@ -21,6 +21,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
 class TeamMembersSerializer(serializers.ModelSerializer):
     members =  UserSimpleSerializer(many=True)
+    leader = UserSimpleSerializer(read_only=True)
 
     class Meta:
         model =  Teams
