@@ -24,9 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model =  User
-        fields = ('id','first_name',"last_name","email",
-                    "birth_date","gender","phone","is_leader",
-                    "profile_pic","team")
+        fields = "__all__"
 
     def get_team(self,user):
         try:
@@ -39,7 +37,7 @@ class SignupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("first_name","last_name","email","password","birth_date","gender","phone")
+        fields ="__all__"
     
     def create(self,validated_data):
        return User.objects.create_user(username=validated_data['email'],**validated_data)
