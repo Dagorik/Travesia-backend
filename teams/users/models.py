@@ -18,7 +18,7 @@ class User(AbstractUser):
     ailment = models.TextField(blank=True, null=True)
     special_medicine =  models.TextField(blank=True, null=True)
     emergency_contact_name =  models.CharField(max_length=150,blank=True, null=True)
-    emergency_contact_phone =  model.CharField(max_length=150,blank=True, null=True)
+    emergency_contact_phone =  models.CharField(max_length=150,blank=True, null=True)
 
 
 
