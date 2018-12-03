@@ -11,7 +11,7 @@ class User(AbstractUser):
     profile_pic = models.URLField()
     name_group_scout = models.CharField(max_length=250,blank=True, null=True)
     clan_name =  models.CharField(max_length=250,blank=True, null=True)
-    province =  models.CharField(max_lengt=250,blank=True, null=True)
+    province =  models.CharField(max_length=250,blank=True, null=True)
     state =  models.CharField(max_length=250,blank=True, null=True)
     blod_type =  models.CharField(max_length=150,blank=True, null=True)
     allergies = models.CharField(max_length=250,blank=True, null=True)
