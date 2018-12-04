@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model =  User
-        fields = "__all__"
+        exclude = ("username",)
 
     def get_team(self,user):
         try:
@@ -37,7 +37,7 @@ class SignupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields ="__all__"
+        exclude = ("username",)
     
     def create(self,validated_data):
        return User.objects.create_user(username=validated_data['email'],**validated_data)

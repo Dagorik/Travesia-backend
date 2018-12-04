@@ -8,7 +8,7 @@ class User(AbstractUser):
     gender = models.CharField(max_length=10,choices=(('H',"Hombre"),('M',"Mujer")),null=True)
     phone = models.CharField(max_length=12,null=True)
     is_leader =  models.BooleanField(default=False)
-    profile_pic = models.URLField()
+    profile_pic = models.URLField(blank=True, null=True)
     name_group_scout = models.CharField(max_length=250,blank=True, null=True)
     clan_name =  models.CharField(max_length=250,blank=True, null=True)
     province =  models.CharField(max_length=250,blank=True, null=True)
