@@ -30,7 +30,7 @@ class SendMail:
 
         subject = "Activa tu cuenta en adds"
         html_body  = f'<p>Ingresa  el  siguiente codigo para activar tu cuenta <br' \
-                     f'<a>{"CODIGO: "+self.kwargs["code"]+"/"}</a>'
+                     f'<a>{"CODIGO: "+self.kwargs["code"]}</a>'
 
         self.send(subject=subject,body=html_body,html=html_body)
 

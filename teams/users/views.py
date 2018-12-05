@@ -47,6 +47,16 @@ class MeView(APIView):
         else:
             return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
 
+class ActivateView(APIView):
+
+    def post(self,request):
+        serializer =  serializers.ActivateSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message":"Account activated successfuly"},status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
+
 
 
 
