@@ -1,10 +1,11 @@
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
+from teams.users.MailService import SendMail
 
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-from teams.users.models import User
+from teams.users.models import User,Codes
 from teams.teamsapp.serializer import TeamSerializer
 from teams.teamsapp.models import Teams
 
@@ -40,7 +41,11 @@ class SignupSerializer(serializers.ModelSerializer):
         exclude = ("username",)
     
     def create(self,validated_data):
-       return User.objects.create_user(username=validated_data['email'],**validated_data)
+       user = User.objects.create_user(username=validated_data['email'],is_active=False,**validated_data)
+       code = Codes.objects.create(user=user,type_code="AC")
+       mail = SendMail(email=user.email,code=code.code)
+       mail.new_account_activate()
+       return user
 
 
 class LoginSerializer(serializers.Serializer):
