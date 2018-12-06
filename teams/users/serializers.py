@@ -68,7 +68,7 @@ class LoginSerializer(serializers.Serializer):
     def create(self,validated_data):
         payload = jwt_payload_handler(self.user)
         token = jwt_encode_handler(payload)
-        return token
+        return (token,self.user)
 
 class ActivateSerializer(serializers.Serializer):
 
@@ -93,7 +93,9 @@ class ActivateSerializer(serializers.Serializer):
         exists_code.is_used = True
         exists_code.user.save()
         exists_code.save()
-        return exists_code
+        payload = jwt_payload_handler(exists_code.user)
+        token = jwt_encode_handler(payload)
+        return token
     
 
 

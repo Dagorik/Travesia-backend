@@ -23,8 +23,8 @@ class LoginView(APIView):
    def post(self,request):
        serializer =  serializers.LoginSerializer(data=request.data)
        if serializer.is_valid():
-           token =  serializer.save()
-           data = {"token":token}
+           (token,user) =  serializer.save()
+           data = {"token":token,"is_active":user.is_active}
            return Response(data,status=status.HTTP_201_CREATED)
        else:
            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
@@ -52,8 +52,8 @@ class ActivateView(APIView):
     def post(self,request):
         serializer =  serializers.ActivateSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response({"message":"Account activated successfuly"},status.HTTP_200_OK)
+            token = serializer.save()
+            return Response({"message":"Account activated successfuly","token":token},status.HTTP_200_OK)
         else:
             return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
 
