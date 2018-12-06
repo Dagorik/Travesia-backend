@@ -9,7 +9,7 @@ class SendMail:
     def __init__(self,email,**kwargs):
         self.email = email
         self.kwargs = kwargs
-        self.sender = "info@reto.mx"
+        self.sender = "info@travesiarover.com.mx"
 
 
 
@@ -28,7 +28,7 @@ class SendMail:
 
     def new_account_activate(self):
 
-        subject = "Activa tu cuenta en adds"
+        subject = "Activa tu cuenta Travesia"
         html_body  = f'<p>Ingresa  el  siguiente codigo para activar tu cuenta <br' \
                      f'<a>{"CODIGO: "+self.kwargs["code"]}</a>'
 
