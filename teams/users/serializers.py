@@ -27,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model =  User
-        exclude = ("username",)
+        exclude = ("username","password")
 
     def get_team(self,user):
         try:

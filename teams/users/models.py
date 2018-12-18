@@ -23,7 +23,7 @@ class User(AbstractUser):
     special_medicine =  models.TextField(blank=True, null=True)
     emergency_contact_name =  models.CharField(max_length=150,blank=True, null=True)
     emergency_contact_phone =  models.CharField(max_length=150,blank=True, null=True)
-
+    baucher =  models.URLField(blank=True, null=True)
 
 def generate_codes():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
