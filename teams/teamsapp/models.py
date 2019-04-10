@@ -44,8 +44,6 @@ class Checkpoint(models.Model):
     qrcode = models.ImageField(upload_to="qrcodes", blank=True, null=True)
     is_active = models.BooleanField(
         default=True, verbose_name="¿Checkpoint Activo?")
-    is_final = models.BooleanField(
-        default=False, verbose_name="¿Checkpoint Final?")
 
     def __str__(self):
         return "%s" % self.ref
