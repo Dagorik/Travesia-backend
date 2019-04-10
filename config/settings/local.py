@@ -16,7 +16,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'teams',
         'USER': 'postgres',
-        'PASSWORD': 'root',
+        'PASSWORD': 'toor',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -27,5 +27,8 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
 
 }
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL =  "/media/"
 
 
