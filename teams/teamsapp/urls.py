@@ -13,7 +13,7 @@ urlpatterns = [
 	path('checkpoint/<uuid:id>/', views.GetCheckPoint.as_view()),
 	path('track/', views.AddTrack.as_view()),
 	path('position/', views.CheckPosition.as_view()),
-	path('leaderboard/', views.LeaderBoard.as_view()),
+	path('leaderboard/', views.LeaderBoardList.as_view()),
 
 
 

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from teams.teamsapp.serializer import *
-from teams.teamsapp.models import Teams, Race, Checkpoint, Track
+from teams.teamsapp.models import Teams, Race, Checkpoint, Track, Leaderboard
 from teams.teamsapp.permissions import IsLeader
 from django.db.models import Max, Min
 
@@ -126,13 +126,9 @@ class CheckPosition(APIView):
         return Response(data, status.HTTP_200_OK)
 
 
-class LeaderBoard(APIView):
+class LeaderBoardList(APIView):
 
     def get(self, request):
-
-        leaderboard = []
-        highest = Track.objects.aggregate(num_checkpoint= Max('checkpoint__num_checkpoint')) 
-        print()
-        
-
-        return Response(leaderboard, status.HTTP_200_OK)
+        leaderboard = Leaderboard.objects.all()
+        serializers = LeaderboardSerializer(leaderboard, many=True)
+        return Response(serializers.data, status.HTTP_200_OK)

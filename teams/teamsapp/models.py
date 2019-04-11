@@ -1,10 +1,12 @@
 from django.db import models
 from io import BytesIO
+from django.utils.safestring import mark_safe
 from uuid import uuid4
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import string
 import random
 import qrcode
+import base64
 
 
 def generate_code():
@@ -41,15 +43,22 @@ class Checkpoint(models.Model):
     ref = models.CharField(max_length=150, verbose_name="Nombre Checkpoint")
     description = models.TextField(blank=True, null=True)
     kilometer = models.IntegerField(verbose_name="Numero del Kilometro")
-    qrcode = models.ImageField(upload_to="qrcodes", blank=True, null=True)
+    qrcode = models.TextField(blank=True, null=True)
     is_active = models.BooleanField(
         default=True, verbose_name="¿Checkpoint Activo?")
+    is_final = models.BooleanField(default=False, verbose_name="¿Es Final?")
 
     def __str__(self):
         return "%s" % self.ref
 
         class Meta:
             ordering = ["num_checkpoint"]
+
+    def image_tag(self):
+        code = self.qrcode.split('\'')
+        return mark_safe('<img src="data:image/png;base64, %s" />' % code[1])
+
+    image_tag.short_description = 'Image'
 
     def generate_qr_code(self):
         qr = qrcode.QRCode(
@@ -64,10 +73,9 @@ class Checkpoint(models.Model):
 
         buffer = BytesIO()
         img.save(buffer)
-        filename = 'checkpoint-%s.png' % (self.id)
-        filebuffer = InMemoryUploadedFile(
-            buffer, None, filename, 'image/png', len(buffer.getvalue()), None)
-        self.qrcode.save(filename, filebuffer)
+        filebuffer = base64.b64encode(buffer.getvalue())
+        self.qrcode = filebuffer
+        self.save()
 
 
 class Race(models.Model):
@@ -109,4 +117,13 @@ class Track(models.Model):
 
 
 class Leaderboard(models.Model):
-    pass
+    id = models.AutoField(primary_key=True)
+    team = models.OneToOneField(
+        Teams, on_delete=models.SET_NULL, related_name="position", null=True)
+    time = models.DateTimeField()
+
+    class Meta:
+        ordering = ['time']
+
+    def __str__(self):
+        return self.team.name

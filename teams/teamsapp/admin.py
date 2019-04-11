@@ -1,5 +1,5 @@
 from django.contrib import admin
-from teams.teamsapp.models import Teams, Race, Checkpoint,Track
+from teams.teamsapp.models import Teams, Race, Checkpoint, Track, Leaderboard
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
@@ -11,15 +11,26 @@ class TeamsAdmin(ImportExportModelAdmin):
 
 @admin.register(Race)
 class RaceAdmin(admin.ModelAdmin):
-	pass
+    pass
+
 
 @admin.register(Track)
 class TrackAdmin(admin.ModelAdmin):
-	pass
+    pass
+
 
 @admin.register(Checkpoint)
 class Checkpoint(ImportExportModelAdmin):
-	def save_model(self, request, obj, form, change):
-		obj.generate_qr_code()
-		super().save_model(request, obj, form, change)
-	
+    fields = ('id', 'num_checkpoint', 'lat', 'long', 'ref',
+              'description', 'kilometer', 'is_active', 'is_final', 'image_tag')
+    readonly_fields = ('image_tag','id')
+
+
+def save_model(self, request, obj, form, change):
+    obj.generate_qr_code()
+    super().save_model(request, obj, form, change)
+
+
+@admin.register(Leaderboard)
+class LeaderboardAdmin(ImportExportModelAdmin):
+    pass

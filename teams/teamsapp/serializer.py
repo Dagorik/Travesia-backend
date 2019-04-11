@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.fields import CurrentUserDefault
 from django.db.models import Q
-from teams.teamsapp.models import Teams, Race, Checkpoint, Track
+from teams.teamsapp.models import Teams, Race, Checkpoint, Track, Leaderboard
 from teams.users.models import User
 from teams.users import serializers as ser
 import datetime
@@ -86,6 +86,12 @@ class CheckpointSerializer(serializers.ModelSerializer):
         exclude = ('qrcode',)
 
 
+class LeaderboardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Leaderboard
+        exclude = ('id',)
+
+
 class AddTrackSerializer(serializers.Serializer):
 
     checkpoint = serializers.UUIDField()
@@ -107,6 +113,14 @@ class AddTrackSerializer(serializers.Serializer):
     def calculate_penalization(self, time, penalization):
         return time + datetime.timedelta(minutes=penalization)
 
+    def create_or_update_leaderboard(self, track):
+        if track.checkpoint.is_final:
+            lead, created = Leaderboard.objects.get_or_create(
+                team=track.team, time=track.total_time)
+            if not created:
+                lead.time = track.total_time
+                lead.save(udpated_field=['time'])
+
     def create(self, validated_data):
         user = self.context['request'].user
         team = Teams.objects.get(leader=user)
@@ -115,11 +129,12 @@ class AddTrackSerializer(serializers.Serializer):
         penalization = (team.members.count() - validated_data['members'])*15
         total_time = self.calculate_penalization(
             validated_data['check_time'], penalization) if penalization > 0 else validated_data['check_time']
-        race = checkpoint.carrera.all()[0]  
+        race = checkpoint.carrera.all()[0]
         current = total_time - race.start_hour
-        Track.objects.create(team=team,
-                             checkpoint=checkpoint,
-                             check_time=validated_data['check_time'],
-                             penalization=penalization,
-                             total_time=total_time)
+        track = Track.objects.create(team=team,
+                                     checkpoint=checkpoint,
+                                     check_time=validated_data['check_time'],
+                                     penalization=penalization,
+                                     total_time=total_time)
+        self.create_or_update_leaderboard(track)
         return {"current_time": str(current), "num_checkpoint": checkpoint.num_checkpoint}
