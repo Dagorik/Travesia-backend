@@ -23,12 +23,12 @@ class TrackAdmin(admin.ModelAdmin):
 class Checkpoint(ImportExportModelAdmin):
     fields = ('id', 'num_checkpoint', 'lat', 'long', 'ref',
               'description', 'kilometer', 'is_active', 'is_final', 'image_tag')
-    readonly_fields = ('image_tag','id')
+    readonly_fields = ('image_tag', 'id')
 
-
-def save_model(self, request, obj, form, change):
-    obj.generate_qr_code()
-    super().save_model(request, obj, form, change)
+    def save_model(self, request, obj, form, change):
+            obj.generate_qr_code()
+            print(obj)
+            super().save_model(request, obj, form, change)
 
 
 @admin.register(Leaderboard)
