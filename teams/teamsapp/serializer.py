@@ -87,6 +87,8 @@ class CheckpointSerializer(serializers.ModelSerializer):
 
 
 class LeaderboardSerializer(serializers.ModelSerializer):
+    team = TeamSerializer()
+
     class Meta:
         model = Leaderboard
         exclude = ('id',)
