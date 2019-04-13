@@ -102,7 +102,7 @@ class AddTrackSerializer(serializers.Serializer):
 
     def validate(self, data):
         user = self.context['request'].user
-        team = user.equipo.all()[0]
+        team = user.equipo.all().first()
         print(team.members)
         if Track.objects.filter(team=team.id, checkpoint=data['checkpoint']).exists():
             raise serializers.ValidationError("Team did this checkpoint")
@@ -131,12 +131,15 @@ class AddTrackSerializer(serializers.Serializer):
         penalization = (team.members.count() - validated_data['members'])*15
         total_time = self.calculate_penalization(
             validated_data['check_time'], penalization) if penalization > 0 else validated_data['check_time']
-        race = checkpoint.carrera.all()[0]
-        current = total_time - race.start_hour
-        track = Track.objects.create(team=team,
-                                     checkpoint=checkpoint,
-                                     check_time=validated_data['check_time'],
-                                     penalization=penalization,
-                                     total_time=total_time)
-        self.create_or_update_leaderboard(track)
-        return {"current_time": str(current), "num_checkpoint": checkpoint.num_checkpoint}
+        race = checkpoint.carrera.all().first()
+        if race:
+            current = total_time - race.start_hour
+            track = Track.objects.create(team=team,
+                                         checkpoint=checkpoint,
+                                         check_time=validated_data['check_time'],
+                                         penalization=penalization,
+                                         total_time=total_time)
+            self.create_or_update_leaderboard(track)
+            return {"current_time": str(current), "num_checkpoint": checkpoint.num_checkpoint}
+        else:
+            raise serializers.ValidationError("Not set race")
