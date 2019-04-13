@@ -111,19 +111,22 @@ class CheckPosition(APIView):
 
     def get(self, request):
         team = Teams.objects.filter(
-            Q(leader=request.user) | Q(members=request.user))[0]
+            Q(leader=request.user) | Q(members=request.user)).first()
         tracks = Track.objects.filter(team=team).order_by('checkpoint').last()
 
-        position = Track.objects.filter(
-            total_time__lt=tracks.total_time, checkpoint__num_checkpoint=tracks.checkpoint.num_checkpoint).count()
-
-        data = {
-            "last_time": tracks.total_time,
-            "position": position+1,
-            "num_checkpoint": tracks.checkpoint.num_checkpoint
-        }
-
-        return Response(data, status.HTTP_200_OK)
+        if(tracks):
+            position = Track.objects.filter(total_time__lt=tracks.total_time,
+                                            checkpoint__num_checkpoint=tracks.checkpoint.num_checkpoint).count()
+            data = {
+                "last_time": tracks.total_time,
+                "position": position+1,
+                "num_checkpoint": tracks.checkpoint.num_checkpoint
+            }
+            status = 200
+        else:
+            data = {}
+            status = 404
+        return Response(data, status)
 
 
 class LeaderBoardList(APIView):
