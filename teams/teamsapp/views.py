@@ -115,10 +115,15 @@ class CheckPosition(APIView):
         tracks = Track.objects.filter(team=team).order_by('checkpoint').last()
 
         if(tracks):
+            race_hour = tracks.checkpoint.carrera.all().first().start_hour
             position = Track.objects.filter(total_time__lt=tracks.total_time,
                                             checkpoint__num_checkpoint=tracks.checkpoint.num_checkpoint).count()
+            laps_time = str(tracks.total_time-race_hour).split(' ')[2]
+            hours, minutes, seconds = laps_time.split(':')
+            print(hours,minutes,seconds)
+
             data = {
-                "last_time": tracks.total_time,
+                "last_time": laps_time,
                 "position": position+1,
                 "num_checkpoint": tracks.checkpoint.num_checkpoint
             }

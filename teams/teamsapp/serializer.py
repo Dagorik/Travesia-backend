@@ -115,31 +115,47 @@ class AddTrackSerializer(serializers.Serializer):
     def calculate_penalization(self, time, penalization):
         return time + datetime.timedelta(minutes=penalization)
 
-    def create_or_update_leaderboard(self, track):
+    def create_or_update_leaderboard(self, track, total_time, current):
+        hours, minutes, seconds = current.split(':')
         if track.checkpoint.is_final:
-            lead, created = Leaderboard.objects.get_or_create(
-                team=track.team, time=track.total_time)
-            if not created:
-                lead.time = track.total_time
-                lead.save(udpated_field=['time'])
+            print(track.team.id)
+            if Leaderboard.objects.filter(team=track.team).exists():
+                lead = Leaderboard.objects.get(team=track.team)
+                lead.time = total_time.strftime("%Y-%m-%d %H:%M:%S")
+                lead.hours = lead.hours+int(hours)
+                lead.minutes = lead.minutes+int(minutes)
+                lead.seconds = lead.seconds+int(seconds)
+                print(total_time, lead.time)
+                lead.save()
+            else:
+                lead = Leaderboard.objects.create(
+                    team=track.team, time=track.total_time, hours=int(hours),
+                    minutes=int(minutes), seconds=int(seconds)
+                )
 
     def create(self, validated_data):
         user = self.context['request'].user
         team = Teams.objects.get(leader=user)
         checkpoint = Checkpoint.objects.get(
             id=validated_data['checkpoint'])
-        penalization = (team.members.count() - validated_data['members'])*15
+        penalization = (team.members.count() - validated_data['members'])*20
         total_time = self.calculate_penalization(
             validated_data['check_time'], penalization) if penalization > 0 else validated_data['check_time']
         race = checkpoint.carrera.all().first()
         if race:
-            current = total_time - race.start_hour
+            current = str(total_time - race.start_hour).split(' ')[2]
+            hours, minutes, seconds = current.split(':')
+            print(hours, minutes, seconds)
             track = Track.objects.create(team=team,
                                          checkpoint=checkpoint,
                                          check_time=validated_data['check_time'],
                                          penalization=penalization,
-                                         total_time=total_time)
-            self.create_or_update_leaderboard(track)
+                                         total_time=total_time,
+                                         hours=int(hours),
+                                         minutes=int(minutes),
+                                         seconds=int(seconds)
+                                         )
+            self.create_or_update_leaderboard(track, total_time, current)
             return {"current_time": str(current), "num_checkpoint": checkpoint.num_checkpoint}
         else:
             raise serializers.ValidationError("Not set race")

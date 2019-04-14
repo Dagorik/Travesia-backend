@@ -106,6 +106,9 @@ class Track(models.Model):
     check_time = models.DateTimeField()
     penalization = models.IntegerField(default=0)
     total_time = models.DateTimeField()
+    hours = models.IntegerField(default=0)
+    minutes = models.IntegerField(default=0)
+    seconds = models.IntegerField(default=0)
 
     def __str__(self):
         return "Track: %s %s " % (self.team.name, self.checkpoint.ref)
@@ -121,6 +124,9 @@ class Leaderboard(models.Model):
     team = models.OneToOneField(
         Teams, on_delete=models.SET_NULL, related_name="position", null=True)
     time = models.DateTimeField()
+    hours = models.IntegerField(default=0)
+    minutes = models.IntegerField(default=0)
+    seconds = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['time']
